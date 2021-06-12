@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<h:form id="new_comp_form">
+			    <p:panelGrid styleClass="css_panel_grid" columns="7">
+			    	<p:outputLabel value="Business Line:"/>
+			    	<p:selectOneMenu id="blines_id" value="#{companyView.selectedBLine}" required="true" requiredMessage="Select Business line first !!!">
+			    		<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+			    		<f:selectItems value="#{companyView.blines}" var="bl" itemLabel="#{bl.name}" itemValue="#{bl.id}" ></f:selectItems>
+			    	</p:selectOneMenu>
+			    	<p:message id="bl_req-msg_id" for="blines_id" />
+			    	<p:spacer width="10px"/>
+			    	<p:commandButton update="bl_req-msg_id co_tbl_id" value="load" action="#{companyView.loadCompanies}"/>
+			    	<p:spacer/>
+			    	<p:commandButton value="add" onclick="PF('createCo_dlg').show();"/>
+			    </p:panelGrid>
+				<p:dataTable id="co_tbl_id" value="#{companyView.companies}" var="co">
+					<p:column headerText="Name">
+						<p:outputLabel value="#{co.name}"/>
+					</p:column>
+					<p:column headerText="Adress">
+						<p:outputLabel value="#{co.address}"/>
+					</p:column>
+					<p:column headerText="logo">
+						<p:graphicImage url="#{co.logo}" width="100px" height="100x" alt="No Logo"/>
+					</p:column>
+					<p:column headerText="Mobile #">
+						<p:outputLabel value="#{co.mobile}"/>
+					</p:column>
+					<p:column headerText="Phone#">
+						<p:outputLabel value="#{co.phone}"/>
+					</p:column>
+					
+					<p:column headerText="Edit">
+						<center>
+							<p:commandLink value="Edit" action="#{companyView.prepareEdit}" update="dlg_id">
+						 	<f:setPropertyActionListener value="#{co}" target="#{companyView.selectedCompany}"></f:setPropertyActionListener>
+							</p:commandLink>
+						</center>
+					</p:column>
+					
+					<p:column headerText="delete">
+						<center>
+							<p:commandLink value="delete" action="#{companyView.delete}" update="generic_message co_tbl_id">
+						 	<p:confirm header="Delete Company" 
+				               message="Sure?" icon="ui-icon-alert"/>
+							 	<f:setPropertyActionListener value="#{co}" target="#{companyView.selectedCompany}"></f:setPropertyActionListener>
+							</p:commandLink>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
+						
+						</center>
+					</p:column>
+					
+					
+				</p:dataTable>
+			</h:form>
+				<p:dialog id="dlg_id" modal="true" widgetVar="createCo_dlg"  width="60%" height="30%">
+					<h:form>
+						<p:fieldset legend="Company">
+								
+								<p:panelGrid columns="4"  styleClass="css_panel_grid">
+									<p:outputLabel value="Business Line:"/>
+							    	<p:selectOneMenu id="blines_co_id" value="#{companyView.company.businessLine}" required="true" requiredMessage="Select Business line first !!!">
+							    		<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							    		<f:selectItems value="#{companyView.blines}" var="bl" itemLabel="#{bl.name}" itemValue="#{bl.id}" ></f:selectItems>
+							    	</p:selectOneMenu>
+							    	
+									<p:outputLabel value="Name"/> <p:inputText value="#{companyView.company.name}" required="true" requiredMessage="Name is required"/>
+									<p:outputLabel value="Address"/> <p:inputText value="#{companyView.company.address}" required="true" requiredMessage="Address is required"/>
+									<p:outputLabel value="Phone #"/> <p:inputMask mask="(999) 999-999999"  value="#{companyView.company.phone}"/>
+									<p:outputLabel value="Mobile #"/> <p:inputMask  mask="(999) 999-99999999" value="#{companyView.company.mobile}"/>
+									<p:outputLabel value="Logo:"/> 
+									 <p:panel>
+									 <p:fileUpload fileUploadListener="#{companyView.handleLogoUpload}" value="#{companyView.file}" 
+									 dragDropSupport="true" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="100000">
+									 
+									 </p:fileUpload>
+									 <p:graphicImage url="#{companyView.company.logo}" width="100px" height="100x" alt="No Logo"/>
+									 </p:panel>
+									<p:spacer/><p:spacer/><p:spacer/>
+								    <p:commandButton update="generic_message :new_comp_form dlg_id" value="Save" action="#{companyView.saveNewCompany}"></p:commandButton>
+								</p:panelGrid>
+							</p:fieldset>
+					</h:form>
+				</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

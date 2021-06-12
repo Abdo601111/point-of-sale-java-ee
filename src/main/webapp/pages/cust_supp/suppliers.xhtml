@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Supplier Manager">
+				<h:form id="all_suppliers_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{supplierView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{supplierView.loadBusinessLineCompanies}"
+								update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{supplierView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{supplierView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{supplierView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+
+						<p:commandButton value="List All"
+							action="#{supplierView.listAllSuppliers}"
+							update="generic_message :all_suppliers_frm_id:supp_tbl_id" />
+						<p:commandButton value="add" action="#{supplierView.prepare4Add}" update="dlg_id" />
+					</p:panelGrid>
+				</h:form>
+				<h:form id="all_suppliers_frm_id">
+					<p:dataTable id="supp_tbl_id" value="#{supplierView.allSuppliers}"
+						var="supp">
+						<p:column headerText="Code">
+							<p:outputLabel value="#{supp.code}" />
+						</p:column>
+						<p:column headerText="Name">
+							<p:outputLabel value="#{supp.name}" />
+						</p:column>
+
+						<p:column headerText="Email">
+							<p:outputLabel value="#{supp.email}" />
+						</p:column>
+						<p:column headerText="Phone">
+							<p:outputLabel value="#{supp.phone}" />
+						</p:column>
+						<p:column headerText="address">
+							<p:outputLabel value="#{supp.address}" />
+						</p:column>
+						<p:column headerText="Edit">
+							<center>
+								<p:commandButton value="Edit"
+									action="#{supplierView.prepare4Edit}" icon="ui-icon-pencil" update="dlg_id">
+									<f:setPropertyActionListener value="#{supp}"
+										target="#{supplierView.supplier}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</center>
+						</p:column>
+
+						<p:column headerText="delete">
+							<center>
+								<p:commandButton value="delete" action="#{supplierView.delete}"
+									icon="fa fa-remove" update="generic_message supp_tbl_id">
+									<p:confirm header="Delete Supplier" message="Sure?"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{supp}"
+										target="#{supplierView.supplier}"></f:setPropertyActionListener>
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+
+			<p:dialog id="dlg_id" modal="true" widgetVar="supplier_dlg"
+				width="80%" height="60%">
+				<h:form id="all_suppliers_form_id">
+					<p:fieldset legend="Add/Edit Supplier">
+						
+							<p:panelGrid columns="6" styleClass="css_panel_grid">
+
+								<p:outputLabel value="Name:" />
+								<p:inputText value="#{supplierView.supplier.name}" 
+								required="true" requiredMessage="Name is required" />
+
+								<p:outputLabel value="Email:" />
+								<p:inputText value="#{supplierView.supplier.email}" id="cust_email_id">
+									<p:ajax listener="#{supplierView.checkMailAvailability}" update="generic_message cust_email_id" event="blur"> </p:ajax>
+								</p:inputText>
+
+								<p:outputLabel value="Phone:" />
+								<p:inputMask value="#{supplierView.supplier.phone}" mask="999-9999-9999-999"/>
+								
+								<p:outputLabel value="Phone:" />
+								<p:inputMask value="#{supplierView.supplier.mobile}" mask="999-9999-9999-999"/>
+								
+								<p:outputLabel value=" Search Code:" />
+								<p:inputText value="#{supplierView.supplier.code}"/>
+								
+								<p:outputLabel value="Countries:" />
+								<p:selectOneMenu value="#{supplierView.supplier.country}" filter="true" effect="fade">
+									<p:ajax listener="#{supplierView.loadCountryStates}" update="states_map_id"/>
+									<f:selectItem itemLabel="--Select Country--"></f:selectItem>
+									<f:selectItems value="#{supplierView.countries}"></f:selectItems>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="State:" />
+								<p:selectOneMenu id="states_map_id" value="#{supplierView.supplier.state}"
+								 filter="true" effect="fade">
+									<p:ajax listener="#{supplierView.loadStateCities}" update="city_map_id"/>
+									<f:selectItem itemLabel="--Select State--"></f:selectItem>
+									<f:selectItems value="#{supplierView.states}"></f:selectItems>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="City;" />
+								<p:selectOneMenu value="#{supplierView.supplier.city}" id="city_map_id"
+								 filter="true" effect="fade">
+									<f:selectItem itemLabel="--Select City--"></f:selectItem>
+									<f:selectItems value="#{supplierView.cities}"></f:selectItems>
+								</p:selectOneMenu>
+								<p:outputLabel value="Address:" />
+								<p:inputTextarea value="#{supplierView.supplier.address}" />
+							</p:panelGrid>
+						
+
+						
+								
+						<p:commandButton icon="fa fa-male"
+							update="generic_message :all_suppliers_form dlg_id :all_suppliers_frm_id:supp_tbl_id"
+							value="Save" action="#{supplierView.save}"></p:commandButton>
+						<p:commandButton icon="ui-icon-refresh" type="reset" value="Reset"></p:commandButton>
+						<p:commandButton icon="ui-icon-cancel"
+							onclick="PF('supplier_dlg').hide();" value="cancel"></p:commandButton>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

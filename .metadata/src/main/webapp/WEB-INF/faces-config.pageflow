@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf15110033565451" configfile="/css_pos_mvn/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf15166172520417" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf15166172520428 pf15166172520429 pf151661725204210" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/home.xhtml" id="pf151661725204211" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf15166172520428" path="/pages/home.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/index.xhtml" id="pf151661725204212" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf15166172520429" path="/pages/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/company/company.xhtml" id="pf151661725204213" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf151661725204210" path="/pages/company/company.xhtml"/>
+  <links id="pf15166172520428" target="pf151661725204211" source="pf15166172520417" outcome="home"/>
+  <links id="pf15166172520429" target="pf151661725204212" source="pf15166172520417" outcome="index"/>
+  <links id="pf151661725204210" target="pf151661725204213" source="pf15166172520417" outcome="company"/>
+</pageflow:Pageflow>

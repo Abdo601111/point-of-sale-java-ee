@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="#{lbl['users.page.title']}">
+				<h:form id="all_users_form_id">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="#{lbl['global.bline.list']}" />
+						<p:selectOneMenu id="blines_id"
+							value="#{userView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{userView.loadBusinessLineCompanies}"
+								update="company_id"></p:ajax>
+							<f:selectItem itemLabel="#{lbl['generic.menu.select']}" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{userView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="2px" />
+						<p:outputLabel value="#{lbl['global.company.list']}" />
+						<p:selectOneMenu id="company_id"
+							value="#{userView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<p:ajax listener="#{userView.loadCompanyRoles}" update="role_id"/>
+							<f:selectItem itemLabel="#{lbl['generic.menu.select']}" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{userView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="2px" />
+						<p:outputLabel value="#{lbl['users.page.roles']}" />
+						<p:selectOneMenu id="role_id"
+							value="#{userView.selectedRole}" required="true"
+							requiredMessage="Select Role first !!!">
+							<p:ajax listener="#{userView.loadRoleUsers}" update="all_users_frm_id"/>
+							<f:selectItem itemLabel="#{lbl['generic.menu.select']}" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{userView.allRoles}" var="role"
+								itemLabel="#{role.name}" itemValue="#{role.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:commandButton value="#{lbl['gloabl.list_all']}">
+							<p:ajax listener="#{userView.loadRoleUsers}" update="all_users_frm_id"/>
+						</p:commandButton>
+						<p:commandButton value="add" oncomplete="PF('users_dlg').show();" update="dlg_id" >
+							<f:setPropertyActionListener value="#{false}" target="#{userView.updateMode}"/>
+						</p:commandButton>
+						<p:commandButton rendered="false"  value="show val" action="#{userView.showBooleanValue}"/>
+					</p:panelGrid>
+				</h:form>
+				<h:form id="all_users_frm_id">
+					<p:dataTable id="user_tbl_id" value="#{userView.allUsers}" paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="3,6,9"
+						var="user">
+						<p:column filterBy="#{user.userName}" filterMatchMode="contains"  headerText="Name">
+							<p:outputLabel value="#{user.userName}" />
+						</p:column>
+
+						<p:column headerText="Email">
+							<p:outputLabel value="#{user.email}" />
+						</p:column>
+						<p:column headerText="Card">
+							<p:outputLabel value="#{user.card}" />
+						</p:column>
+						<p:column headerText="Visible">
+							<center><p:selectBooleanCheckbox value="#{user.visible}" /></center>
+						</p:column>
+						
+
+						<p:column headerText="Edit">
+							<center>
+								<p:commandButton value="Edit" oncomplete="PF('users_dlg').show();"
+									icon="ui-icon-pencil" update="dlg_id">
+									<f:setPropertyActionListener value="#{true}" target="#{userView.updateMode}"></f:setPropertyActionListener>
+									<f:setPropertyActionListener value="#{user}"
+										target="#{userView.user}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</center>
+						</p:column>
+
+						<p:column headerText="#{lbl['global.table.btn.delete']}">
+							<center>
+								<p:commandButton value="#{lbl['global.table.btn.delete']}" action="#{userView.delete}"
+									icon="fa fa-remove" update="generic_message user_tbl_id">
+									<p:confirm header="#{lbl['global.confirm.delete.title']}" message="#{msg['msg.global.confirm.delete']}"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{user}"
+										target="#{userView.user}"></f:setPropertyActionListener>
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="#{lbl['global.confirm.yes']}" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="#{lbl['global.confirm.no']}" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+
+			<p:dialog style="z-index:9000000" id="dlg_id" position="center" widgetVar="users_dlg"
+				width="80%" height="60%">
+				<h:form id="new_user_form_id">
+					<p:fieldset legend="Add/Edit Customer">
+						<p:panel header="Personal Info">
+							<p:panelGrid columns="6" styleClass="css_panel_grid">
+
+								<p:outputLabel value="#{lbl['users.page.fullname']}" rendered="#{userView.updateMode ne true}" />
+								<p:inputText rendered="#{userView.updateMode ne true}"  value="#{userView.user.fullName}"
+									required="true" requiredMessage="Fisrt Name is required" />
+								
+								<p:outputLabel value="#{lbl['users.page.email']}" />
+								<p:inputText value="#{userView.user.email}" id="user_email_id">
+									<p:ajax listener="#{userView.checkMailAvailability}" update="generic_message user_email_id" event="blur"> </p:ajax>
+								</p:inputText>
+								<p:outputLabel value="#{lbl['users.page.address']}" rendered="#{userView.updateMode ne true}" />
+								<p:inputText rendered="#{userView.updateMode ne true}" value="#{userView.user.address}" />
+								
+								<p:outputLabel value="#{lbl['users.page.phone']}" rendered="#{userView.updateMode ne true}" />
+								<p:inputMask value="#{userView.user.phone}" rendered="#{userView.updateMode ne true}" mask="999-9999-9999-999"/>
+
+								<p:outputLabel value="#{lbl['users.page.mobile']}" rendered="#{userView.updateMode ne true}" />
+								<p:inputMask value="#{userView.user.mobile}"  mask="999-9999-9999-999" rendered="#{userView.updateMode ne true}" />
+								
+								<p:outputLabel value="#{lbl['users.page.card']}" rendered="#{userView.updateMode ne true}"  />
+								<p:inputMask value="#{userView.user.card}" mask="9999-9999-9999-9999" rendered="#{userView.updateMode ne true}" />
+								
+								<p:outputLabel value="#{lbl['users.page.companyadmin']}" />
+								<p:selectBooleanCheckbox value="#{userView.user.companyAdmin}"/>
+
+								<p:outputLabel value="#{lbl['users.page.superadmin']}" />
+								<p:selectBooleanCheckbox value="#{userView.user.superAdmin}"/>
+								
+								<p:outputLabel value="#{lbl['users.page.visible']}" />
+								<p:selectBooleanCheckbox value="#{userView.user.visible}"/>
+								
+							</p:panelGrid>
+						</p:panel>
+						
+						<p:panel header="#{lbl['users.page.login.info.title']}">
+							<p:commandLink immediate="true"  rendered="#{userView.updateMode}" actionListener="#{userView.resetPassword}" value="#{lbl['users.page.reset_password']}"/>
+							<p:panelGrid columns="4" styleClass="css_panel_grid">
+
+								<p:outputLabel value="#{lbl['users.page.loginname']}" />
+								<p:inputText value="#{userView.user.userName}" />
+								
+								<p:outputLabel  rendered="#{userView.updateMode ne true}" value="#{lbl['users.page.set_pass_method']}" />
+								<p:selectOneRadio  rendered="#{userView.updateMode ne true}" id="pass_options_id" value="#{userView.passChoice}">
+									<p:ajax update="u_pass_id"> </p:ajax>
+									<f:selectItem itemLabel="#{lbl['users.page.send.def.pass']}" itemValue="0"/>
+									<f:selectItem itemLabel="#{lbl['users.page.send.random.password']}" itemValue="1"/>
+								</p:selectOneRadio>
+								
+								
+								
+								<p:outputLabel  rendered="#{userView.updateMode ne true}" value="#{lbl['users.page.loginpass']}" />
+								<p:password  rendered="#{userView.updateMode ne true}" id="u_pass_id" disabled="#{userView.passChoice ne -1}" value="#{userView.user.password}" />
+								<p:selectBooleanCheckbox  rendered="#{userView.updateMode ne true}" value="#{userView.useCustomPassword}">
+									<p:ajax listener="#{userView.forceUsingCustomPassword}" update="u_pass_id pass_options_id"/>
+								</p:selectBooleanCheckbox>
+								<p:panel>
+									<p:outputLabel value="#{lbl['users.page.active_till']}"/>
+									<p:calendar value="#{userView.user.activeUntil}"/>
+								</p:panel>
+							</p:panelGrid>
+						</p:panel>
+						<p:outputLabel rendered="#{userView.updateMode ne true}" value="#{lbl['users.page.profile.pic']}" />
+						<p:panel>
+							<p:fileUpload  rendered="#{userView.updateMode ne true}"
+								fileUploadListener="#{userView.handleLogoUpload}"
+								value="#{userView.file}" dragDropSupport="true"
+								mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+								sizeLimit="100000">
+
+							</p:fileUpload>
+							<p:graphicImage rendered="#{userView.updateMode ne true}"  url="#{userView.user.image}" width="100px"
+								height="100x" alt="#{lbl['global.no.image']}" />
+						</p:panel>
+
+
+						<p:commandButton icon="fa fa-male"
+							update="generic_message dlg_id all_users_frm_id:user_tbl_id"
+							value="Save" action="#{userView.save}"></p:commandButton>
+						<p:commandButton icon="ui-icon-refresh" type="reset" value="Reset"></p:commandButton>
+						<p:commandButton icon="ui-icon-cancel"
+							onclick="PF('users_dlg').hide();" value="cancel"></p:commandButton>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

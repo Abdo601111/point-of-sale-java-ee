@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<f:view contentType="text/html">
+	<h:head>
+		<meta charset="UTF-8" />
+		<title>CSS - POS</title>
+		<link rel="stylesheet"
+			href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+			<f:loadBundle var="lbl" basename="com.css.pos.common.resources.lables"></f:loadBundle>
+			<f:loadBundle var="msg" basename="com.css.pos.common.resources.messages"></f:loadBundle>
+	</h:head>
+	<h:body>
+		<div class="container">
+			<section id="content"> <p:messages /> <h:form>
+				<h1>CSS POS</h1>
+				<div>
+					<p:inputText value="#{authenticationView.userName}"
+						placeholder="#{lbl['login.page.user_name']}" required="true"
+						requiredMessage="Enter username!" id="username" />
+				</div>
+				<div>
+					<p:password value="#{authenticationView.password}"
+						placeholder="#{lbl['login.page.user_pass']}" required="true"
+						requiredMessage="Enter password!" id="userpass" />
+				</div>
+				<div>
+					<p:selectOneMenu id="blines_id" style="width:85%"
+							value="#{authenticationView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{authenticationView.loadBusinessLineCompanies}"
+								update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select Business line --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{authenticationView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						
+						
+				</div>
+				<div>
+				<p:selectOneMenu id="company_id" style="width:85%"
+							value="#{authenticationView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<p:ajax listener="#{authenticationView.loadCompanyBranches}" update="branch_id"/>
+							<f:selectItem itemLabel="--Select Company--" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{authenticationView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+				</div>
+				<div>
+				<p:selectOneMenu id="branch_id" style="width:85%"
+							value="#{authenticationView.selectedBranch}" required="true"
+							requiredMessage="Select Branch first !!!">
+							<f:selectItem itemLabel="--Select Branch--" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{authenticationView.branches}" var="br"
+								itemLabel="#{br.name}" itemValue="#{br.id}"></f:selectItems>
+						</p:selectOneMenu>
+				</div>
+				<div>
+					<h:commandButton action="#{authenticationView.authenticate}"
+						value="Log in" />
+					<p:commandLink value="#{lbl['login.page.forgot_password']}" /> 
+				</div>
+			</h:form> <!-- form --> </section>
+			<!-- content -->
+		</div>
+		<!-- container -->
+
+		<script
+			src="#{facesContext.externalContext.request.contextPath}/resources/js/index.js"></script>
+
+	</h:body>
+</f:view>
+</html>

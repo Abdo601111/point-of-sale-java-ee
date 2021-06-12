@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Branch Manager">
+				<h:form id="new_branch_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{branchView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{branchView.loadBusinessLineCompanies}" update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{branchView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="bl_req-msg_id" for="blines_id" />
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{branchView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{branchView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="co_req-msg_id" for="company_id" />
+						<p:spacer width="10px"/>
+						<p:commandButton update="bl_req-msg_id br_tbl_id co_req-msg_id generic_message"  value="load"
+							action="#{branchView.loadBranches}" />
+						<p:spacer />
+						<p:commandButton value="add" onclick="PF('createBr_dlg').show();" />
+					</p:panelGrid>
+					
+					<p:dataTable id="br_tbl_id" value="#{branchView.allBranches}"
+						var="br">
+						<p:column headerText="Name">
+							<p:outputLabel value="#{br.name}" />
+						</p:column>
+						<p:column headerText="Adress">
+							<p:outputLabel value="#{br.address}" />
+						</p:column>
+						<p:column headerText="Mobile #">
+							<p:outputLabel value="#{br.mobile}" />
+						</p:column>
+						<p:column headerText="Phone#">
+							<p:outputLabel value="#{br.phone}" />
+						</p:column>
+
+						<p:column headerText="Edit">
+							<center>
+								<p:commandLink value="Edit" action="#{branchView.prepareEdit}"
+									update="dlg_id">
+									<f:setPropertyActionListener value="#{br}"
+										target="#{branchView.branch}"></f:setPropertyActionListener>
+								</p:commandLink>
+							</center>
+						</p:column>
+
+						<p:column headerText="delete">
+							<center>
+								<p:commandLink value="delete" action="#{branchView.delete}"
+									update="generic_message br_tbl_id">
+									<p:confirm header="Delete Company Branch" message="Sure?"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{br}"
+										target="#{branchView.branch}"></f:setPropertyActionListener>
+								</p:commandLink>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+			
+			<p:dialog id="dlg_id" modal="true" widgetVar="createBr_dlg"
+				width="60%" height="30%">
+				<h:form>
+					<p:fieldset legend="Branch">
+
+						<p:panelGrid columns="4" styleClass="css_panel_grid">
+							<p:outputLabel value="Business Line:" />
+							<p:selectOneMenu id="blines_co_id"
+								value="#{branchView.selectedBLine}" required="true"
+								requiredMessage="Select Business line first !!!">
+								<p:ajax listener="#{branchView.loadBusinessLineCompanies}" update="new_company_id"></p:ajax>
+								<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{branchView.blines}" var="bl"
+									itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:outputLabel value="Company:" />
+							<p:selectOneMenu id="new_company_id"
+								value="#{branchView.branch.companyId}" required="true"
+								requiredMessage="Select Company first !!!">
+								<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{branchView.companies}" var="bl"
+									itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+							</p:selectOneMenu>
+							<p:outputLabel value="Name" />
+							<p:inputText value="#{branchView.branch.name}" required="true"
+								requiredMessage="Name is required" />
+							<p:outputLabel value="Address" />
+							<p:inputText value="#{branchView.branch.address}"
+								required="true" requiredMessage="Address is required" />
+							<p:outputLabel value="Phone #" />
+							<p:inputMask mask="(999) 999-999999" value="#{branchView.branch.phone}" />
+							<p:outputLabel value="Mobile #" />
+							<p:inputMask  mask="(999) 999-99999999" value="#{branchView.branch.mobile}" />
+							
+							
+							<p:spacer />
+							<p:spacer />
+							<p:spacer />
+							<p:commandButton update="generic_message :new_branch_form dlg_id"
+								value="Save" action="#{branchView.saveBranch}"></p:commandButton>
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

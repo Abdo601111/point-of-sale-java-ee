@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Close Cash">
+				<h:form id="new_cat_form">
+					
+					<p:dataTable id="br_tbl_id" value="#{paymentsView.payments}"
+						var="pay">
+						<p:column headerText="Description">
+							<p:outputLabel value="#{pay.payment}" />
+						</p:column>
+						
+						<p:column headerText="Reason">
+							<p:outputLabel value="#{pay.writewhy}" />
+						</p:column>
+						<p:column headerText="Total">
+							<p:outputLabel value="#{pay.total}" />
+						</p:column>
+					</p:dataTable>
+				<p:commandButton value="Close Cash-Box" action="#{paymentsView.closeCashBox}"
+					onclick="return confirm('Are you sure you wanna close cashbox??')"/>
+				</h:form>
+			
+			</p:fieldset>
+			
+			
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

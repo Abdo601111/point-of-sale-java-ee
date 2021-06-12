@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+		<script src="#{facesContext.externalContext.request.contextPath}/resources/js/shortcut.js"></script>
+			<script type="text/javascript">
+				shortcut.add("F4", 
+					
+					function() {
+						PF('searchDlg').show();
+					}, {
+						'type' : 'keydown',
+						'propagate' : true,
+						'target' : document
+					});
+				function zeroMoneyChecker(element) {
+
+					if (element.value == '0.00' || element.value == '0.0') {
+						element.value = '';
+					}
+				}
+				function qtyPriceBlur() {
+
+					var total = 0;
+
+					$('.qtyClass')
+							.each(
+									function() {
+
+										var qty = this.value;
+										//alert(qty);
+										var price = $(this).closest("tr").find(
+												".priceClass").val();
+
+										if (!isNaN(qty)) {
+											//debit += parseFloat(this.value);
+
+											var rowValue = qty * price;
+
+											$(this).closest("tr").find(
+													".moneyAmountClass").html(
+													rowValue);
+
+											total = total + rowValue;
+										}
+
+									});
+
+					$('.totalFooter').html(total);
+					$('.netTotalFooter').html(total);
+				}
+				function calDiscount(discElement){
+						var disc = discElement.value;
+						if (!isNaN(disc)) {
+							var subTotal = parseFloat($('.totalFooter').html());
+							var net = parseFloat((1-disc/100)*subTotal);
+							$('.netTotalFooter').html(net);
+						}
+				}
+				function updateAfterRemoval(){
+					qtyPriceBlur();
+					$('.discTxt').focus();
+					calDiscount($('.discTxt'));
+					
+				}
+				function checkMoneyCalculations(){
+					var subTotal = parseFloat($('.subtotal_money_id').html());
+					var cash = $('.cash_money_id').val();
+					var credit = $('.credit_money_id').val();
+					var debit= $('.debit_money_id').val();
+					
+					if(parseFloat(credit) + parseFloat(cash) + parseFloat(debit) !=  subTotal){
+						alert('Payment total doesn\'t equal details !!! ');
+						return false;
+					}					
+					
+					return true;
+					
+				}
+			</script>
+					
+			<p:fieldset legend="Sales Invoice (S):">
+				<h:form>
+					<p:outputLabel value="Product :"/>
+					
+					<p:autoComplete placeholder="Barecode" id="acMinLength" minQueryLength="3" forceSelection="true" 
+						value="#{salesView.selectedProduct.code}" onfocus="this.value = '';"
+							update="generic_message :sales_inv_id:sold_items_table_id"
+						completeMethod="#{salesView.completeProductByCode}" effect="fade" >
+						 <p:ajax event="itemSelect" listener="#{salesView.handleProductSelect}" 
+						 update="generic_message :sales_inv_id:sold_items_table_id"/>
+					</p:autoComplete>
+					
+					<p:autoComplete placeholder="Product Name" id="acMinLength2" minQueryLength="3" forceSelection="true" 
+						value="#{salesView.selectedProduct.name}" onfocus="this.value = '';"
+							update="generic_message :sales_inv_id:sold_items_table_id"
+						completeMethod="#{salesView.completeProductByName}" effect="fade" >
+						 <p:ajax event="itemSelect" listener="#{salesView.handleProductSelect}" 
+						 update=":sales_inv_id:sold_items_table_id"/>
+					</p:autoComplete>
+					
+					
+					<p:commandButton icon="fa fa-search" onclick="PF('search4Product').show();"></p:commandButton>
+				</h:form>
+				<h:form id="sales_inv_id">
+				
+					<table width="95%">
+						<tr>
+							<td><p:panel style="height:160px; width:95%">
+									<p:commandButton value="Home" immediate="true" icon="fa fa-home"
+										action="#{purchaseView.gotoHomeCategories}"
+										update="home_cats_grid_id" />
+									<p:dataGrid style="height:150px" var="cat"
+										value="#{purchaseView.viewCategories}" columns="4"
+										id="home_cats_grid_id">
+										<p:column>
+
+											<p:fieldset style="width:100%;height:30px">
+												<p:graphicImage value="#{cat.logo}" width="20px;height:10px" />
+												&nbps;
+												&nbps;
+												&nbps;|#{cat.name}  &nbps;
+												&nbps;
+												&nbps;|
+													
+												<p:commandButton  immediate="true"	action="#{purchaseView.viewCategoryDetails}"
+												 icon="fa fa-search"
+												update="home_cats_grid_id :sales_inv_id:products_grid_id">
+													<f:setPropertyActionListener value="#{cat}"
+														target="#{purchaseView.selectedCategory}"></f:setPropertyActionListener>
+												</p:commandButton>
+											</p:fieldset>
+
+										</p:column>
+									</p:dataGrid>
+								</p:panel></td>
+							<td rowspan="2"><p:panel header="Invoice" id="billPanel"
+									style="height:476px;width:400px">
+									<p:panelGrid styleClass="css_panel_grid" columns="3">
+										
+										<p:outputLabel value="Customer" />
+										<p:inputText id="customerNameId" disabled="true" value="#{salesView.selectedCustomer.name}"></p:inputText>
+										<p:commandButton icon="fa fa-search" onclick="PF('searchCustDlg').show();"/> 
+										
+									</p:panelGrid>
+
+									<p:dataTable id="sold_items_table_id"
+										value="#{salesView.invoice.items}" var="item">
+										<p:column>
+											<p:outputLabel value="#{item.order}" />
+										</p:column>
+										<p:column>
+											<p:outputLabel value="#{item.productName}" />
+										</p:column>
+
+										<p:column>
+											<h:inputText title="Quantity" size="4" placeholder="Qty"
+												onfocus="zeroMoneyChecker(this)" styleClass="qtyClass"
+												value="#{item.units}" />
+										</p:column>
+										<p:column>
+											<h:inputText title="Price" size="4" placeholder="Price"
+												onblur="qtyPriceBlur()" onfocus="zeroMoneyChecker(this)"
+												styleClass="priceClass" value="#{item.price}" />
+										</p:column>
+										<p:column>
+											<h:outputLabel style="COLOR:RED"
+												styleClass="moneyAmountClass" />
+										</p:column>
+										<p:column>
+											<p:commandButton icon="fa fa-trash"
+												oncomplete="updateAfterRemoval();"
+												action="#{salesView.removeFromCart}"
+												update=":sales_inv_id:sold_items_table_id">
+												<p:confirm header="Delete Product" message="Sure?"
+													icon="ui-icon-alert" />
+												<f:setPropertyActionListener value="#{item}"
+													target="#{salesView.selectedItem}"></f:setPropertyActionListener>
+											</p:commandButton>
+
+											<p:confirmDialog global="true" showEffect="fade"
+												hideEffect="fade">
+												<p:commandButton value="Yes" type="button"
+													styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+												<p:commandButton value="No" type="button"
+													styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+											</p:confirmDialog>
+										</p:column>
+									</p:dataTable>
+									<p:separator style="color:red;width:350px"></p:separator>
+									<p:panelGrid styleClass="css_panel_grid" columns="2">
+										<p:outputLabel value="Sub-Total:" />
+										<p:outputLabel styleClass="totalFooter" style="color:red" />
+										
+										<p:outputLabel value="Discount" />
+										<p:inputMask styleClass="discTxt" value="#{purchaseView.invoice.discount}" mask="99" size="4" onblur="calDiscount(this)" />
+										
+										<p:separator style="color:red;width:150px"></p:separator>
+										<p:separator style="color:red;width:150px"></p:separator>
+										
+										<p:outputLabel value="Total:" />
+										<p:outputLabel style="color:red" styleClass="netTotalFooter" />
+										
+										<p:spacer />
+										<p:commandButton icon="fa fa-money" action="#{purchaseView.proceed4Payment}" 
+										update="generic_message paymentDlg" value="Save" />
+									</p:panelGrid>
+								</p:panel></td>
+						</tr>
+						<tr>
+							<td style="height:160px; width:95%"><p:panel 
+									header="Items/Products">
+									<p:dataGrid var="prod" value="#{purchaseView.products}"
+										columns="5" id="products_grid_id" rows="12">
+										<p:column>
+											<p:panel header="#{prod.name}">
+												<h:panelGrid columns="1">
+													<p:graphicImage width="100px" height="80px"
+														value="#{prod.logo}" />
+													<p:outputLabel value="#{prod.pricebuy}" />
+													<p:commandButton immediate="true" 
+														icon="fa fa-cart-plus"
+														actionListener="#{purchaseView.addToCart}"
+														update="generic_message :sales_inv_id:sold_items_table_id">
+														<f:setPropertyActionListener value="#{prod}"
+															target="#{purchaseView.selectedProduct}"></f:setPropertyActionListener>
+													</p:commandButton>
+												</h:panelGrid>
+											</p:panel>
+										</p:column>
+									</p:dataGrid>
+								</p:panel></td>
+
+						</tr>
+					</table>
+				</h:form>
+			</p:fieldset>
+			<p:dialog id="searchCustDlg" width="50%" modal="true" widgetVar="searchCustDlg">
+				
+				<h:form>
+					<p:fieldset legend="Search for Customer:">
+						<p:panelGrid columns="3" styleClass="css_panel_grid">
+							<p:outputLabel value="Cusomter Name:"/>
+							<p:inputText value="#{salesView.customerSearchName}" 
+							id="cusSerachId" required="true" requiredMessage="Enter search keyword!!!"></p:inputText>
+							<p:message for="cusSerachId"></p:message>
+							<p:spacer/>
+							<p:commandButton update="custTableId" action="#{salesView.searchForCustomer}" value="Search" icon="fa fa-search" />
+							
+						</p:panelGrid>
+						<p:dataTable value="#{salesView.customers}" var="cust" id="custTableId">
+							<p:column>
+								#{cust.name}	
+							</p:column>
+						
+							<p:column>
+								<p:commandButton onclick="PF('searchCustDlg').hide();" actionListener="#{salesView.selectCustomer4Invoice}"
+								  value="Select" update=":sales_inv_id:customerNameId">
+									<f:setPropertyActionListener value="#{cust}" target="#{salesView.selectedCustomer}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</p:column>
+						
+						</p:dataTable>
+						
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+			
+			<p:dialog id="search4ProducttDlg" width="500px" height="400px" modal="true" widgetVar="search4Product">
+				<h:form id="adv_srch_form_id">
+					<p:fieldset legend="Product Advanced Search:">
+						<p:panelGrid  styleClass="css_panel_grid" columns="3">
+							<p:outputLabel value="Name:"/>
+							<p:inputText value="#{salesView.selectedProduct.name}"/>
+							<p:selectOneMenu value="#{salesView.nameCriteria}">
+								<f:selectItem itemValue="0" itemLabel="AND" />
+								<f:selectItem itemValue="1" itemLabel="OR"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Code:"/>
+							<p:inputText value="#{salesView.selectedProduct.code}"/>
+							<p:selectOneMenu  value="#{salesView.codeCriteria}">
+								<f:selectItem itemValue="0" itemLabel="AND" />
+								<f:selectItem itemValue="1" itemLabel="OR"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Sell Price:"/>
+							<p:inputText value="#{salesView.selectedProduct.pricesell}"/>
+							<p:selectOneMenu  value="#{salesView.priceCriteria}">
+								<f:selectItem itemValue="1" itemLabel="&gt;"/>
+								<f:selectItem itemValue="-1" itemLabel="&lt;"/>
+								<f:selectItem itemValue="0" itemLabel="="/>
+							</p:selectOneMenu>
+							<p:spacer/>
+							<p:commandButton update=":adv_srch_form_id:productsAdvancedSearchtbl" action="#{salesView.searchProductAdvanced}" value="Search" icon="fa fa-search"/>
+						</p:panelGrid>
+						<p:dataTable id="productsAdvancedSearchtbl" value="#{salesView.products}" var="p">
+							<p:column headerText="Name"> #{p.name}</p:column>
+							<p:column headerText="Code"> #{p.code}</p:column>
+							<p:column headerText="Price"> #{p.pricesell}</p:column>
+							<p:column headerText="+"> 
+								<p:commandButton onclick="PF('search4Product').hide();" update=":sales_inv_id:sold_items_table_id"
+								 action="#{salesView.addToCart}" value="Add">
+									<f:setPropertyActionListener value="#{p}" target="#{salesView.selectedProduct}"></f:setPropertyActionListener>
+								</p:commandButton> 
+							</p:column>
+						</p:dataTable>
+					</p:fieldset>
+				</h:form>	
+			</p:dialog>
+			
+			
+			<p:dialog id="searchDlg" modal="true" widgetVar="searchDlg"
+				width="60%" height="30%">
+				<h:form>
+					<p:fieldset legend="Search for Invoice:">
+							
+						<p:panelGrid columns="2" styleClass="css_panel_grid">
+							<p:outputLabel value="Invoice Number:"/> 
+							<p:inputText value="#{purchaseView.searchInvNumber}" required="true" requiredMessage="Enter invocie number !!!"/>
+							<p:outputLabel value="Vendor:" />
+								<p:selectOneMenu required="true" requiredMessage="Select a Vendor!!" value="#{purchaseView.invoice.supplier}">
+									<f:selectItem noSelectionOption="true" itemLabel="-- Select --"/>
+									<f:selectItems value="#{purchaseView.suppliers}" var="supp"
+										itemLabel="#{supp.name}" itemValue="#{supp.id}" />
+								</p:selectOneMenu>
+							<p:outputLabel value="Invocie Type:" />
+							<p:selectOneMenu required="true" requiredMessage="Select a type!!" 
+							value="#{purchaseView.invoice.type}">
+								<f:selectItem noSelectionOption="true" itemLabel="-- Select --"/>
+								<f:selectItems value="#{purchaseView.movmentTypes}"  />
+							</p:selectOneMenu>
+										
+											
+							<p:commandButton   icon="fa fa-search" action="#{purchaseView.search4Invocie}" update=":sales_inv_id:billPanel paymentDlg  generic_message" value="Search" />
+						</p:panelGrid>
+						
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+			
+			
+			
+			<ui:remove>SESSION 31 </ui:remove>
+			<p:dialog id="paymentDlg" modal="true" widgetVar="paymentDlg"
+				width="60%" height="30%">
+				<h:form>
+					<p:fieldset legend="Payment Method (s):">
+							
+						<p:panelGrid columns="2" styleClass="css_panel_grid">
+							<p:outputLabel value="Money to Pay ($):"/> <p:outputLabel styleClass="subtotal_money_id" value="#{purchaseView.invoice.total}"/>
+							<p:outputLabel value="Cash ($):"/> <h:inputText styleClass="cash_money_id" value="#{purchaseView.invoice.cashPayment}"/>
+							<p:outputLabel value="Debit ($):"/> <h:inputText styleClass="debit_money_id" value="#{purchaseView.invoice.debitPayment}"/>
+							<p:outputLabel value="Credit Card ($):"/> <h:inputText styleClass="credit_money_id" value="#{purchaseView.invoice.creditPayment}"/>	
+							<p:commandButton onclick="return checkMoneyCalculations();" oncomplete="PF('paymentDlg').hide();"  icon="fa fa-save" action="#{purchaseView.saveInvoice}" update="paymentDlg :sales_inv_id:billPanel generic_message" value="Pay" />
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+			<ui:remove>SESSION 31 </ui:remove>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

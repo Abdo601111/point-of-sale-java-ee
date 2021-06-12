@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="products" pageWidth="595" pageHeight="842" columnWidth="536" leftMargin="29" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="path" class="java.lang.String"/>
+	<parameter name="branch" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     TO_CHAR(TICKETS.TICKET_DATE,'yyyy-mm-dd hh:MM:ss') AS TICKETS_TICKET_DATE,
+     NVL(TICKETS.TICKET_COST,0) AS TICKETS_TICKET_COST,
+     TICKETS.TICKET_TOTAL-NVL(TICKETS.TICKET_COST,0) AS TICKET_PROFIT,
+     TICKETS."TICKET_NUMBER" AS TICKETS_TICKETID,
+     TICKETS."TICKETTYPE" AS TICKETS_TICKETTYPE,
+     TICKETS."TICKET_TOTAL" AS TICKETS_TICKET_TOTAL,
+     COMPANY."NAME" AS COMPANY_NAME,
+     COMPANY."ADDRESS" AS COMPANY_ADDRESS,
+     COMPANY."PHONE" AS COMPANY_PHONE,
+     COMPANY."MOBILE" AS COMPANY_MOBILE,
+     COMPANY."BUSINESS" AS COMPANY_BUSINESS,
+     TICKETS."TICKET_COST" AS TICKETS_TICKET_COST ,
+BRANCH.NAME
+FROM
+     "TICKETS" TICKETS,
+     "COMPANY" COMPANY,
+     "BRANCH" BRANCH
+WHERE
+TICKETS."TICKET_NUMBER" IS NOT NULL
+ AND TICKETS.Branch = BRANCH.ID
+AND BRANCH.COMPANY = COMPANY.ID
+AND Branch.ID  = $P{branch}
+ORDER BY
+TICKETS."TICKET_NUMBER"]]>
+	</queryString>
+	<field name="TICKETS_TICKET_DATE" class="java.lang.String"/>
+	<field name="TICKETS_TICKET_COST" class="java.math.BigDecimal"/>
+	<field name="TICKET_PROFIT" class="java.math.BigDecimal"/>
+	<field name="TICKETS_TICKETID" class="java.math.BigDecimal"/>
+	<field name="TICKETS_TICKETTYPE" class="java.math.BigDecimal"/>
+	<field name="TICKETS_TICKET_TOTAL" class="java.lang.Double"/>
+	<field name="COMPANY_NAME" class="java.lang.String"/>
+	<field name="COMPANY_ADDRESS" class="java.lang.String"/>
+	<field name="COMPANY_PHONE" class="java.lang.String"/>
+	<field name="COMPANY_MOBILE" class="java.lang.String"/>
+	<field name="COMPANY_BUSINESS" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<variable name="Total_Profit" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{TICKET_PROFIT}]]></variableExpression>
+	</variable>
+	<variable name="TicketTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{TICKETS_TICKET_TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="TotalCost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{TICKETS_TICKET_COST}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band height="205">
+			<textField>
+				<reportElement x="220" y="57" width="310" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="33" width="310" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="5" width="310" height="23"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="18"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="11" y="9" width="100" height="82"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{path}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="114" width="535" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[أرباح المبيعات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="477" y="160" width="47" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[الفرع :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="365" y="160" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="365" y="180" width="159" height="1"/>
+			</line>
+			<line>
+				<reportElement x="365" y="183" width="159" height="1"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33">
+			<staticText>
+				<reportElement x="191" y="6" width="58" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[تكلفة الفاتورة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="266" y="6" width="57" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[نوع الفاتورة ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="6" width="118" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[تاريخ الفاتورة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="475" y="6" width="32" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[رقم الفاتورة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="6" width="70" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[الربح]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="6" width="66" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[اجمالى الفاتورة]]></text>
+			</staticText>
+			<line>
+				<reportElement key="line-1" mode="Opaque" x="23" y="32" width="484" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement key="line-1" mode="Opaque" x="23" y="29" width="484" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22">
+			<line>
+				<reportElement key="line-1" mode="Opaque" x="23" y="21" width="484" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="475" y="1" width="32" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKETS_TICKETID}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="1" width="118" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKETS_TICKET_DATE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="109" y="2" width="66" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKETS_TICKET_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="22" y="1" width="70" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKET_PROFIT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="266" y="1" width="57" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{TICKETS_TICKETTYPE}.equals("0"))?"مرتجع":"مبيعات"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="191" y="1" width="58" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TICKETS_TICKET_COST}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="76">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-6" mode="Opaque" x="234" y="52" width="20" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-7" mode="Opaque" x="267" y="52" width="19" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-5" mode="Opaque" x="256" y="52" width="11" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<line>
+				<reportElement key="line-3" mode="Opaque" x="0" y="12" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="215" y="28" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_PHONE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="28" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="28" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COMPANY_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="69">
+			<textField pattern="###0.00">
+				<reportElement x="23" y="44" width="70" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{Total_Profit}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="23" y="3" width="197" height="1"/>
+			</line>
+			<line>
+				<reportElement x="22" y="23" width="197" height="1"/>
+			</line>
+			<line>
+				<reportElement x="23" y="43" width="197" height="1"/>
+			</line>
+			<line>
+				<reportElement x="23" y="64" width="197" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="23" y="4" width="70" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{TicketTotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="23" y="24" width="70" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{TotalCost}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="175" y="4" width="44" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[مبيعات]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="24" width="45" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[تكلفة]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="44" width="45" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[أرباح]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

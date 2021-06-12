@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			
+			
+			<h:form>
+				
+					<p:dashboard model="#{homeView.board}">
+					
+			            <p:panel id="reports" header="Reports">
+			                <h:outputText value="Important reports links" />
+			            </p:panel>
+			            <p:panel header="notifications" id="notifications">
+			                <h:outputText value="Important notifications" />
+			            </p:panel>
+			            <p:panel id="todo" header="To do">
+			                <h:outputText value="To do list" />
+			            </p:panel>
+			            <p:panel id="msgs" header="Messages">
+			                <h:outputText value="Messages list left for you" />
+			            </p:panel>
+				    </p:dashboard>
+				
+	       </h:form>
+	       
+	       
+	       
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

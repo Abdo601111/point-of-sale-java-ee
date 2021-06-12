@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <lookup_lists>
+        <lookup_list>
+            <code>1</code>
+            <name_ar>قائمة الخواص</name_ar>
+            <name_en>Product Attributes</name_en>
+        </lookup_list>
+        
+    </lookup_lists>
+</root>

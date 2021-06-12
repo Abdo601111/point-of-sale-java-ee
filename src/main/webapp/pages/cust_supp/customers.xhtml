@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Customer Manager">
+				<h:form id="all_customers_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{customerView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{customerView.loadBusinessLineCompanies}"
+								update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{customerView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{customerView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{customerView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+
+						<p:commandButton value="List All"
+							action="#{customerView.listAllCustomers}"
+							update="generic_message :all_customers_frm_id:cust_tbl_id" />
+						<p:commandButton value="add" action="#{customerView.prepare4Add}" update="dlg_id" />
+					</p:panelGrid>
+				</h:form>
+				<h:form id="all_customers_frm_id">
+					<p:dataTable id="cust_tbl_id" value="#{customerView.allCustomers}"
+						var="cust">
+						<p:column headerText="Name">
+							<p:outputLabel value="#{cust.name}" />
+						</p:column>
+
+						<p:column headerText="Email">
+							<p:outputLabel value="#{cust.email}" />
+						</p:column>
+						<p:column headerText="Card">
+							<p:outputLabel value="#{cust.card}" />
+						</p:column>
+						<p:column headerText="Cu. debit">
+							<p:outputLabel value="#{cust.curdebt}" />
+						</p:column>
+						<p:column headerText="Max. debit">
+							<p:outputLabel value="#{cust.maxdebt}" />
+						</p:column>
+
+						<p:column headerText="Edit">
+							<center>
+								<p:commandButton value="Edit"
+									action="#{customerView.prepare4Edit}" icon="ui-icon-pencil" update="dlg_id">
+									<f:setPropertyActionListener value="#{cust}"
+										target="#{customerView.customer}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</center>
+						</p:column>
+
+						<p:column headerText="delete">
+							<center>
+								<p:commandButton value="delete" action="#{customerView.delete}"
+									icon="fa fa-remove" update="generic_message cust_tbl_id">
+									<p:confirm header="Delete customer" message="Sure?"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{cust}"
+										target="#{customerView.customer}"></f:setPropertyActionListener>
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+
+			<p:dialog id="dlg_id" modal="true" widgetVar="customer_dlg"
+				width="80%" height="60%">
+				<h:form id="all_customers_form_id">
+					<p:fieldset legend="Add/Edit Customer">
+						<p:panel header="Personal Info">
+							<p:panelGrid columns="6" styleClass="css_panel_grid">
+
+								<p:outputLabel value="First Name:" />
+								<p:inputText value="#{customerView.customer.firstname}"
+									required="true" requiredMessage="Fisrt Name is required" />
+
+								<p:outputLabel value="Last Name ;" />
+								<p:inputText value="#{customerView.customer.lastname}"
+									required="true" requiredMessage="Last Name is required" />
+
+								<p:outputLabel value="Reference Name:" />
+								<p:inputText value="#{customerView.customer.name}" 
+								required="true" requiredMessage="Reference Name is required" />
+
+								<p:outputLabel value="Email:" />
+								<p:inputText value="#{customerView.customer.email}" id="cust_email_id">
+									<p:ajax listener="#{customerView.checkMailAvailability}" update="generic_message cust_email_id" event="blur"> </p:ajax>
+								</p:inputText>
+
+								<p:outputLabel value="Notes:" />
+								<p:inputTextarea value="#{customerView.customer.notes}" />
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Contact Info">
+							<p:panelGrid columns="6" styleClass="css_panel_grid">
+
+								<p:outputLabel value="Phone:" />
+								<p:inputMask value="#{customerView.customer.phone}" mask="999-9999-9999-999"/>
+
+								<p:outputLabel value="Phone 2" />
+								<p:inputMask value="#{customerView.customer.phone2}"  mask="999-9999-9999-999"/>
+								
+								<p:outputLabel value="Postal Code:" />
+								<p:inputText value="#{customerView.customer.postal}" />
+
+								<p:outputLabel value="Fax #:" />
+								<p:inputText value="#{customerView.customer.fax}" />
+								
+								<p:spacer/><p:spacer/><p:spacer/><p:spacer/>
+								<p:outputLabel value="Countries:" />
+								<p:selectOneMenu value="#{customerView.customer.country}" filter="true" effect="fade">
+									<p:ajax listener="#{customerView.loadCountryStates}" update="states_map_id"/>
+									<f:selectItem itemLabel="--Select Country--"></f:selectItem>
+									<f:selectItems value="#{customerView.countries}"></f:selectItems>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="State:" />
+								<p:selectOneMenu id="states_map_id" value="#{customerView.customer.state}"
+								 filter="true" effect="fade">
+									<p:ajax listener="#{customerView.loadStateCities}" update="city_map_id"/>
+									<f:selectItem itemLabel="--Select State--"></f:selectItem>
+									<f:selectItems value="#{customerView.states}"></f:selectItems>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="City;" />
+								<p:selectOneMenu value="#{customerView.customer.city}" id="city_map_id"
+								 filter="true" effect="fade">
+									<f:selectItem itemLabel="--Select City--"></f:selectItem>
+									<f:selectItems value="#{customerView.cities}"></f:selectItems>
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Adress (1):" />
+								<p:inputText value="#{customerView.customer.address}" />
+								
+								<p:outputLabel value="Address (2)" />
+								<p:inputText value="#{customerView.customer.address2}" />
+							</p:panelGrid>
+						</p:panel>
+						
+						<p:panel header="Payment Info">
+							<p:panelGrid columns="6" styleClass="css_panel_grid">
+
+								<p:outputLabel value="Credit Card number:" />
+								<p:inputMask value="#{customerView.customer.card}" mask="9999-9999-9999-9999"/>
+								
+								<p:outputLabel value="Max. debit" />
+								<p:inputText value="#{customerView.customer.maxdebt}"/>
+
+								<p:outputLabel value="Current Debit" />
+								<p:inputText value="#{customerView.customer.curdebt}" />
+							</p:panelGrid>
+						</p:panel>
+						
+						
+
+						<p:commandButton icon="fa fa-male"
+							update="generic_message :all_customers_form dlg_id :all_customers_frm_id:cust_tbl_id"
+							value="Save" action="#{customerView.save}"></p:commandButton>
+						<p:commandButton icon="ui-icon-refresh" type="reset" value="Reset"></p:commandButton>
+						<p:commandButton icon="ui-icon-cancel"
+							onclick="PF('customer_dlg').hide();" value="cancel"></p:commandButton>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

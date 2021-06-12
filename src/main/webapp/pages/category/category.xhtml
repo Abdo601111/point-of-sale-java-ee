@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Category Manager">
+				<h:form id="new_cat_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{categoryView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{categoryView.loadBusinessLineCompanies}" update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{categoryView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="bl_req-msg_id" for="blines_id" />
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{categoryView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<p:ajax listener="#{categoryView.loadCompanyCats}" update="br_tbl_id :new_cat_frm_id:p_cat_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{categoryView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="co_req-msg_id" for="company_id" />
+						<p:spacer width="10px"/>
+						
+						<p:commandButton value="add" actionListener="#{categoryView.prepare4Add}" update="dlg_id"/>
+					</p:panelGrid>
+					
+					<p:dataTable id="br_tbl_id" value="#{categoryView.allCats}"
+						var="cat">
+						<p:column headerText="Name">
+							<p:outputLabel value="#{cat.name}" />
+						</p:column>
+						<p:column headerText="Icon">
+							<p:graphicImage url="#{cat.logo}" width="100px" height="100x" alt="No Logo"/>
+						</p:column>
+						<p:column headerText="Parent">
+						<center>
+							<h:selectOneMenu id="p_cat_id" disabled="true"
+								value="#{cat.parentId}">
+								<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{categoryView.allCats}" var="cat"
+									itemLabel="#{cat.name}" itemValue="#{cat.id}"></f:selectItems>
+							</h:selectOneMenu>
+						</center>	
+						</p:column>
+						<p:column headerText="Contains Products?">
+						<center>
+							<p:selectBooleanCheckbox value="#{cat.hasProducts}" disabled="true"/>
+						</center>
+						</p:column>
+						
+						<p:column headerText="Edit">
+							<center>
+								<p:commandLink value="Edit" action="#{categoryView.prepareEdit}"
+									update="dlg_id">
+									<f:setPropertyActionListener value="#{cat}"
+										target="#{categoryView.cat}"></f:setPropertyActionListener>
+								</p:commandLink>
+							</center>
+						</p:column>
+
+						<p:column headerText="delete">
+							<center>
+								<p:commandLink value="delete" action="#{categoryView.delete}"
+									update="generic_message br_tbl_id">
+									<p:confirm header="Delete Product Category" message="Sure?"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{cat}"
+										target="#{categoryView.cat}"></f:setPropertyActionListener>
+								</p:commandLink>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+			
+			<p:dialog id="dlg_id" modal="true" widgetVar="createCat_dlg"
+				width="60%" height="30%">
+				<h:form id="new_cat_frm_id">
+					<p:fieldset legend="Category">
+
+						<p:panelGrid columns="4" styleClass="css_panel_grid">
+							
+							<p:outputLabel value="Name" />
+							<p:inputText value="#{categoryView.cat.name}" required="true"
+								requiredMessage="Name is required" />
+							<p:outputLabel value="Parent Category:" />
+							<p:selectOneMenu id="p_cat_id"
+								value="#{categoryView.cat.parentId}">
+								<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+								<f:selectItems value="#{categoryView.allCats}" var="cat"
+									itemLabel="#{cat.name}" itemValue="#{cat.id}"></f:selectItems>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Has Product(s)?"/>
+							<p:selectBooleanCheckbox value="#{categoryView.cat.hasProducts}"/>
+							
+							<p:outputLabel value="Category Icon:"/>
+							<p:panel>
+							 <p:fileUpload fileUploadListener="#{categoryView.handleLogoUpload}" value="#{categoryView.file}" 
+							 dragDropSupport="true" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="100000">
+							 
+							 </p:fileUpload>
+							 <p:graphicImage url="#{categoryView.cat.logo}" width="100px" height="100x" alt="No Logo"/>
+							 </p:panel>
+									
+							<p:spacer />
+							<p:spacer />
+							<p:spacer />
+							<p:commandButton update="generic_message :new_cat_form dlg_id"
+								value="Save" action="#{categoryView.saveCategory}"></p:commandButton>
+						</p:panelGrid>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

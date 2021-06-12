@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	dir="#{baseBean.selectedLanguage eq 'AR'?'rtl':'ltr'}">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<meta name="description" content="website description" />
+	<meta name="keywords" content="CSS, IT, POS, JEE" />
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css"
+		href="http://fonts.googleapis.com/css?family=Tangerine&amp;v1" />
+	<link rel="stylesheet" type="text/css"
+		href="http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/style.css" />
+	<f:loadBundle var="lbl" basename="com.css.pos.common.resources.lables"></f:loadBundle>
+	<f:loadBundle var="msg" basename="com.css.pos.common.resources.messages"></f:loadBundle>
+</h:head>
+<h:body>
+	<div id="main">
+		<div id="header">
+			<p:growl id="generic_message" />
+			    <table style="width:100%">
+						<tr>
+							<td>
+								<h:form>
+								<div id="logo">
+									<h1>
+										CSS - <p:commandLink value="POS" action="home"/>
+									</h1>
+								</div>
+								</h:form>
+							</td>
+							<td colspan="3" style="width:60%">
+							<h:form>
+								<p:menubar>
+										<p:menuitem value="Home" action="home"></p:menuitem>
+										<p:submenu label="#{lbl['menu.security']}" icon="fa fa-lock">
+											<p:menuitem icon="fa fa-male" action="/pages/security/roles"
+												value="#{lbl['menu.roles']}" />
+											<p:menuitem icon="fa fa-male" action="/pages/security/users"
+												value="#{lbl['menu.users']}" />
+										</p:submenu>
+										<p:submenu label="Company" icon="ui-icon-document">
+											<p:menuitem action="/pages/company/businessline"
+												value="Business Line" />
+											<p:menuitem action="company" value="Company" />
+											<p:menuitem action="/pages/company/branch" value="Branch" />
+										</p:submenu>
+										<p:submenu label="Customers">
+											<p:menuitem action="/pages/cust_supp/customers" value="Customers" />
+											<p:menuitem action="/pages/cust_supp/suppliers" value="Suppliers" />
+										</p:submenu>
+										<p:submenu label="Product" icon="ui-icon-document">
+											<p:menuitem action="/pages/category/category" value="Category" />
+											<p:menuitem action="/pages/administration/lookupdata_list"
+												value="Product Attributes" />
+											<p:menuitem action="/pages/category/product" value="Product" />
+											<p:separator />
+											
+										</p:submenu>
+										<p:submenu label="Services" icon="ui-icon-document">
+											<p:menuitem value="Stock Diary" action="/pages/invoices/purchase" />
+											<p:menuitem value="Sales Invoice" action="/pages/invoices/sales"/>
+											<p:menuitem value="Close Cash box" action="/pages/payment/closecash" />
+										</p:submenu>
+										<p:submenu label="My Acccount" icon="ui-icon-document">
+											<p:menuitem value="Change Password" action="/pages/security/changePassword" />
+											<p:menuitem value="Signout" ajax="false" action="#{homeView.logout}">
+												<p:confirm header="Log out" message="Sure?"
+											icon="ui-icon-alert" />
+											</p:menuitem>
+										</p:submenu>
+									</p:menubar>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Yes" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="No" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+								</h:form>
+								
+							</td>
+							<td>
+								<h:form>
+									<h:selectOneMenu onchange="submit();" value="#{baseBean.selectedLanguage}" valueChangeListener="#{baseBean.switchlanguage}">
+										<f:selectItem itemLabel="Select Language" noSelectionOption="true"/>
+										<f:selectItem itemLabel="English" itemValue="EN"/> 
+										<f:selectItem itemLabel="عربي" itemValue="AR"/>
+									</h:selectOneMenu>
+								</h:form>
+							</td>
+							<td>
+								<div class="slogan">Point of Sale System</div>
+							</td>
+							</tr>
+				</table>
+
+			
+		</div>
+		<div id="site_content">
+
+			<div id="content">
+
+				<ui:insert name="pos_contents">
+
+				</ui:insert>
+				<!-- insert the page content here -->
+
+			</div>
+		</div>
+		<div id="footer">
+			<p>
+				Copyright &copy; 2017 CSS | <a href="http://css4it.com">JEE
+					Workshop</a>
+			</p>
+		</div>
+
+	</div>
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/custom_pf.css" />
+
+
+
+</h:body>
+</html>

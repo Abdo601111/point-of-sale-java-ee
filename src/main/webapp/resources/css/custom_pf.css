@@ -1,0 +1,59 @@
+.ui-messages-info-summary, .ui-messages-warn-summary, .ui-messages-error-summary, .ui-messages-fatal-summary, .ui-message-info-summary, .ui-message-warn-summary, .ui-message-error-summary, .ui-message-fatal-summary {
+    margin-left: 10px;!important
+    font-weight: inherit;!important
+    background: #ffffff;!important
+    /* color: #111; */
+    padding: 7px 4px;!important
+    text-align: left;!important
+}
+.ui-messages-error, .ui-message-error {
+	color: #D8000C;
+	background-color: white;
+}
+
+.ui-messages-warn, .ui-message-warn {
+	color: #002163;
+	background-color: white;
+}
+
+.css_panel_grid.ui-panelgrid>*>tr,
+.css_panel_grid.ui-panelgrid .ui-panelgrid-cell {
+    border: none;
+    background: white;
+}
+
+.ui-widget-content {
+    border: 1px solid #a8a8a8;
+    color: #4f4f4f;
+}
+
+.ui-menu, .ui-menu .ui-menu-child {
+    background: white url("/css_pos/javax.faces.resource/images/ui-bg_highlight-hard_80_c4c4c4_1x100.png.xhtml?ln=primefaces-aristo") top repeat-x;
+    background: white linear-gradient(top,rgba(255,255,255,0.8),rgba(255,255,255,0));
+    background: white -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.8)),to(rgba(255,255,255,0)));
+    background: white -moz-linear-gradient(top,rgba(255,255,255,0.8),rgba(255,255,255,0));
+}
+
+.ui-widget-content {
+    background: #fff;
+    color: #4f4f4f;
+}
+div.ui-menu li {
+    list-style:none;
+    background-image:none;
+    background-repeat:none;
+    background-position:0; 
+}
+ul
+{
+    list-style-type:none;
+    padding:0px;
+    margin:0px;
+}
+li
+{
+    background-image:url(sqpurple.gif);
+    background-repeat:no-repeat;
+    background-position:0px 5px; 
+    padding-left:14px;
+}

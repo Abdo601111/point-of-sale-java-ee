@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- MySQL database -->
+        <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+        <!-- show SQL in console -->
+        <property name="hibernate.show_sql">true</property>
+        <!-- readable format for SQL output in the console -->
+        <property name="format_sql">true</property>
+        
+        
+        <!--
+        <mapping package="com.css.pos.domain.*"/>
+        <mapping class="com.css.pos.domain.BusinessLine"/>
+        <mapping class="com.css.pos.domain.Company"/>
+        <mapping class="com.css.pos.domain.Branch"/>
+        <mapping class="com.css.pos.domain.Category"/>
+        <mapping class="com.css.pos.domain.LookupData"/>
+        <mapping class="com.css.pos.domain.Product"/>
+        <mapping class="com.css.pos.domain.ProductAttribute"/>
+        <mapping class="com.css.pos.domain.City"/>
+        <mapping class="com.css.pos.domain.State"/>
+        <mapping class="com.css.pos.domain.Country"/>
+        <mapping class="com.css.pos.domain.Customer"/>
+        <mapping class="com.css.pos.domain.Supplier"/>
+        <mapping class="com.css.pos.domain.Role"/>
+        <mapping class="com.css.pos.domain.People"/>
+        <mapping class="com.css.pos.domain.Screen"/>
+        <mapping class="com.css.pos.domain.RolePermission"/>
+        -->
+        <mapping class="com.css.pos.domain.Branch"/>
+		<mapping class="com.css.pos.domain.BusinessLine"/>
+		<mapping class="com.css.pos.domain.Category"/>
+		<mapping class="com.css.pos.domain.City"/>
+		<mapping class="com.css.pos.domain.Company"/>
+		<mapping class="com.css.pos.domain.Country"/>
+		<mapping class="com.css.pos.domain.Customer"/>
+		<mapping class="com.css.pos.domain.LookupData"/>
+		<mapping class="com.css.pos.domain.Payment"/>
+		<mapping class="com.css.pos.domain.People"/>
+		<mapping class="com.css.pos.domain.Product"/>
+		<mapping class="com.css.pos.domain.ProductAttribute"/>
+		<mapping class="com.css.pos.domain.Receipt"/>
+		<mapping class="com.css.pos.domain.Role"/>
+		<mapping class="com.css.pos.domain.RolePermission"/>
+		<mapping class="com.css.pos.domain.Screen"/>
+		<mapping class="com.css.pos.domain.State"/>
+		<mapping class="com.css.pos.domain.Supplier"/>
+		<mapping class="com.css.pos.domain.Ticket"/>
+		<mapping class="com.css.pos.domain.Ticketline"/>
+		<mapping class="com.css.pos.domain.Stockcurrent"/>
+		<mapping class="com.css.pos.domain.Stockdiary"/>
+		<mapping class="com.css.pos.domain.Stockin"/>
+		<mapping class="com.css.pos.domain.Stocklevel"/>
+		<mapping class="com.css.pos.domain.Stokenpybill"/>
+		<mapping class="com.css.pos.domain.Supplier"/>
+		<mapping class="com.css.pos.domain.Ticket"/>
+		<mapping class="com.css.pos.domain.Ticketline"/>
+		<mapping class="com.css.pos.domain.SuppliersPayment"/>
+		<mapping class="com.css.pos.domain.Closedcash"/>
+					
+    </session-factory>
+</hibernate-configuration>

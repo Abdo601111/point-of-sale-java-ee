@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<h:form id="prod_attr">
+				<p:fieldset legend="Product Attributes" toggleable="true">
+					<p:panelGrid styleClass="css_panel_grid" columns="9">
+						<p:outputLabel value="Lookup Type:"/>
+						<p:selectOneMenu id="lookups_id"
+							value="#{lookupdataView.selectedlookupTypeCode}" required="true"
+							requiredMessage="Select Lookup Type first !!!">
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{lookupdataView.allLookupTypes}" var="lu"
+								itemLabel="#{lu.nameEn}" itemValue="#{lu.code}"></f:selectItems>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{lookupdataView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{lookupdataView.loadBusinessLineCompanies}" update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{lookupdataView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{lookupdataView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{lookupdataView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						
+						<p:commandButton update="lu_table generic_message"  value="load"
+							action="#{lookupdataView.loadLookups}" />
+						<p:commandButton update="lu_table generic_message" immediate="true"  value="*New"
+							action="#{lookupdataView.addNewLookup}" />
+					</p:panelGrid>
+					
+					
+					
+					<p:dataTable value="#{lookupdataView.alllookups}" var="lu" id="lu_table">
+						<p:column headerText="#" width="5%">
+							<center><p:outputLabel value="#{rowIndex}"/></center>
+						</p:column>
+						<p:column headerText="Value">
+							<center><p:inputText value="#{lu.value}"/></center>
+						</p:column>
+						<p:column headerText="update">
+							<center>
+							<p:commandLink value="update" partialSubmit="true" update="lu_table generic_message" action="#{lookupdataView.saveLUp}">
+								<f:setPropertyActionListener value="#{lu}" target="#{lookupdataView.selectedLUp}"></f:setPropertyActionListener>
+							</p:commandLink>
+							</center>
+						</p:column>
+						<p:column headerText="delete">
+							<center>
+							<p:commandLink value="delete" partialSubmit="true" update="lu_table generic_message" action="#{lookupdataView.deleteLUp}">
+								<p:confirm header="Delete Lookup data" message="Sure?"
+										icon="ui-icon-alert" />
+								<f:setPropertyActionListener value="#{lu}" target="#{lookupdataView.selectedLUp}"></f:setPropertyActionListener>
+							</p:commandLink>
+							<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+							</center>
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</h:form>
+			
+			<h:form id="tbl_form">
+					
+				<p:fieldset legend="Lookup Data list" toggleable="true" collapsed="true">
+					<p:commandButton update="lu_table" value="refresh" action="#{lookupdataView.listAllLookupTypes}"></p:commandButton>
+					<p:commandButton update="lu_table" value="+" action="#{lookupdataView.addLookupType}"></p:commandButton>
+					<p:dataTable value="#{lookupdataView.allLookupTypes}" var="lu" id="lu_table">
+						<p:column headerText="#" width="5%">
+							<center><p:outputLabel value="#{lu.code}"/></center>
+						</p:column>
+						<p:column headerText="Arabic Name">
+							<center><p:inputText value="#{lu.nameAr}"/></center>
+						</p:column>
+						<p:column headerText="English Name">
+							<center><p:inputText value="#{lu.nameEn}"/></center>
+						</p:column>
+						<p:column headerText="update">
+							<center>
+							<p:commandLink value="update" partialSubmit="true" update="lu_table generic_message" action="#{lookupdataView.saveLType}">
+								<f:setPropertyActionListener value="#{lu}" target="#{lookupdataView.selectedLookupElement}"></f:setPropertyActionListener>
+							</p:commandLink>
+							</center>
+						</p:column>
+						<p:column headerText="delete">
+							<center>
+							<p:commandLink value="delete" partialSubmit="true" update="lu_table generic_message" action="#{lookupdataView.deleteLType}">
+								<f:setPropertyActionListener value="#{lu}" target="#{lookupdataView.selectedLookupElement}"></f:setPropertyActionListener>
+							</p:commandLink>
+							</center>
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="Product Manager">
+				<h:form id="all_products_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="Business Line:" />
+						<p:selectOneMenu id="blines_id"
+							value="#{productView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{productView.loadBusinessLineCompanies}" update="company_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{productView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="2px" />
+						<p:outputLabel value="Company:" />
+						<p:selectOneMenu id="company_id"
+							value="#{productView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<p:ajax listener="#{productView.loadCompanyStaff}" update=":all_products_form_id :all_products_form:category_id"></p:ajax>
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{productView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:spacer width="10px"/>
+						<p:outputLabel value="Product Category" />
+						<p:selectOneMenu id="category_id"
+							value="#{productView.selectedCategory}" required="true"
+							requiredMessage="Select Category first !!!">
+							<!-- <p:ajax listener="#{productView.loadCategoryProducts}" update=":all_prods_frm_id:prod_tbl_id"></p:ajax> -->
+							<f:selectItem itemLabel="--Select --" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{productView.allCats}" var="cat"
+								itemLabel="#{cat.name}" itemValue="#{cat.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:commandButton value="List All" action="#{productView.listAllProducts}" update="generic_message :all_prods_frm_id:prod_tbl_id"/>
+						<p:commandButton value="add" onclick="PF('createProduct_dlg').show();" />
+					</p:panelGrid>
+				</h:form>	
+				<h:form id="all_prods_frm_id">	
+					<p:dataTable id="prod_tbl_id" value="#{productView.allProducts}"
+						var="prod">
+						<p:column headerText="Bar Code">
+							<p:outputLabel value="#{prod.code}" />
+						</p:column>
+						
+						<p:column headerText="Name">
+							<p:outputLabel value="#{prod.name}"/>
+						</p:column>
+						<p:column headerText="Buy Proce">
+							<p:outputLabel value="#{prod.pricebuy}"/>
+						</p:column>
+						<p:column headerText="Sell Price">
+							<p:outputLabel value="#{prod.pricesell}"/>
+						</p:column>
+						<p:column headerText="Icon">
+							<p:graphicImage url="#{prod.logo}" width="100px" height="100x" alt="No Logo"/>
+						</p:column>
+						<p:column headerText="Edit">
+							<center>
+								<p:commandButton value="Edit" action="#{productView.prepareEdit}" icon="ui-icon-pencil"
+									update="dlg_id">
+									<f:setPropertyActionListener value="#{prod}"
+										target="#{productView.product}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</center>
+						</p:column>
+
+						<p:column headerText="delete">
+							<center>
+								<p:commandButton value="delete" action="#{productView.delete}" icon="ui-icon trash"
+									update="generic_message prod_tbl_id">
+									<p:confirm header="Delete Product Category" message="Sure?"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{prod}"
+										target="#{productView.product}"></f:setPropertyActionListener>
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+			
+			<p:dialog id="dlg_id" modal="true" widgetVar="createProduct_dlg"
+				width="80%" height="60%">
+				<h:form id="all_products_form_id">
+					<p:fieldset legend="Product">
+
+						<p:panelGrid columns="8" styleClass="css_panel_grid">
+							
+							<p:outputLabel value="Name" />
+							<p:inputText value="#{productView.product.name}" required="true"
+								requiredMessage="Name is required" />
+							<p:outputLabel value="Barcode"/>
+							<p:inputText value="#{productView.product.code}" required="true"
+							requiredMessage="Barcode is required" />
+							<p:outputLabel value="Ref. code:"/>
+							<p:inputText value="#{productView.product.reference}"/>
+							<p:outputLabel value="Buy price ($):"/>
+							<p:inputText value="#{productView.product.pricebuy}" size="5"/>
+							<p:outputLabel value="Sell Price($):"/>
+							<p:inputText value="#{productView.product.pricesell}" size="5"/>
+							<p:outputLabel value="Is Scale?"/>
+							<p:selectBooleanCheckbox value="#{productView.product.isscale}"/>
+							
+							
+							
+							
+						</p:panelGrid>
+						
+							
+								<p:commandButton update="attr_tbl_id" immediate="true" icon="ui-icon-plusthick" value="Add" action="#{productView.addProductAttribute}"/>
+								<p:commandButton value="refresh" icon="ui-icon-refresh"></p:commandButton>
+							
+							<p:dataTable scrollable="true" scrollRows="5"  scrollHeight="40%" width="50%" id="attr_tbl_id" value="#{productView.product.attributes}" var="attr">
+								<p:column width="30%" headerText="Property">
+									<center>
+									<h:selectOneMenu required="true" value="#{attr.attributeId}">
+										<f:selectItem itemLabel="-- Select --" noSelectionOption="true"/>
+										<f:selectItems value="#{productView.lookupData}" var="lu"
+										 itemLabel="#{lu.value}" itemValue="#{lu.id}"></f:selectItems>
+									</h:selectOneMenu>
+									</center>
+								</p:column>
+								
+								<p:column width="40%" headerText="Value">
+									<center>
+										<p:inputText value="#{attr.value}"/>
+									</center>
+								</p:column>
+								<p:column width="30%" headerText="delete">
+									<center>
+										<p:commandButton icon="ui-icon-trash" immediate="true" value="delete" action="#{productView.deleteProductAttribute}"
+											update="generic_message attr_tbl_id">
+											<p:confirm header="Delete product property" message="Sure?"
+												icon="ui-icon-alert" />
+											<f:setPropertyActionListener value="#{attr}"
+												target="#{productView.productAttr}"></f:setPropertyActionListener>
+										</p:commandButton>
+										<p:confirmDialog global="true" showEffect="fade"
+											hideEffect="fade">
+											<p:commandButton value="Yes" type="button"
+												styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+											<p:commandButton value="No" type="button"
+												styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+										</p:confirmDialog>
+									</center>	
+								</p:column>
+							</p:dataTable>
+						
+						
+						<p:panelGrid columns="2"  styleClass="css_panel_grid">
+							<p:outputLabel value="Category Icon:"/>
+							<p:panel>
+							 <p:fileUpload fileUploadListener="#{productView.handleLogoUpload}" value="#{productView.file}" 
+							 dragDropSupport="true" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="100000">
+							 
+							 </p:fileUpload>
+							 <p:graphicImage url="#{productView.product.logo}" width="100px" height="100x" alt="No Logo"/>
+							 </p:panel>
+							
+						</p:panelGrid>
+						<p:commandButton icon="ui-icon-disk" update="generic_message :all_products_form dlg_id :all_prods_frm_id:prod_tbl_id"          
+								value="Save" action="#{productView.saveProduct}"></p:commandButton>
+						<p:commandButton icon="ui-icon-refresh" type="reset" value="Reset"></p:commandButton>
+						<p:commandButton icon="ui-icon-cancel" onclick="PF('createProduct_dlg').hide();" value="cancel"></p:commandButton>
+					</p:fieldset>
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

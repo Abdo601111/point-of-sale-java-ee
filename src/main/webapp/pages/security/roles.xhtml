@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<p:fieldset legend="#{lbl['roles.page_title']}">
+				<h:form id="new_role_form">
+					<p:panelGrid styleClass="css_panel_grid" columns="11">
+						<p:outputLabel value="#{lbl['global.bline.list']}" />
+						<p:selectOneMenu id="blines_id"
+							value="#{roleView.selectedBLine}" required="true"
+							requiredMessage="Select Business line first !!!">
+							<p:ajax listener="#{roleView.loadBusinessLineCompanies}" update="company_id"></p:ajax>
+							<f:selectItem itemLabel="#{lbl['generic.menu.select']}" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{roleView.blines}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="bl_req-msg_id" for="blines_id" />
+						<p:spacer width="2px" />
+						<p:outputLabel value="#{lbl['global.company.list']}" />
+						<p:selectOneMenu id="company_id"
+							value="#{roleView.selectedCompany}" required="true"
+							requiredMessage="Select Company first !!!">
+							<p:ajax listener="#{roleView.loadRoles}" update="role_tbl_id"></p:ajax>
+							<f:selectItem itemLabel="#{lbl['generic.menu.select']}" noSelectionOption="true"></f:selectItem>
+							<f:selectItems value="#{roleView.companies}" var="bl"
+								itemLabel="#{bl.name}" itemValue="#{bl.id}"></f:selectItems>
+						</p:selectOneMenu>
+						<p:message id="co_req-msg_id" for="company_id" />
+						<p:spacer width="10px"/>
+						<p:commandButton update="role_tbl_id"  value="#{lbl['global.btn.load']}">
+							<p:ajax listener="#{roleView.loadRoles}" update="role_tbl_id"></p:ajax>
+						</p:commandButton>
+						<p:spacer />
+						<p:commandButton value="#{lbl['global.btn.add']}" actionListener="#{roleView.addNewRole}" update="role_tbl_id"/>
+					</p:panelGrid>
+					
+					<p:dataTable id="role_tbl_id" style="width:60%" value="#{roleView.allRoles}"
+						var="role" emptyMessage="#{lbl['global.table.no_rec_found']}">
+						<p:column headerText="#{lbl['global.table.name']}">
+							<center>
+								<p:inputText value="#{role.name}" size="50"/>
+							</center>	
+						</p:column>
+						<p:column headerText="#{lbl['global.table.save']}" width="15%">
+							<center>
+								<p:commandButton value="#{lbl['global.table.btn.save']}" action="#{roleView.save}" icon="fa fa-save" update="generic_message">
+									<f:setPropertyActionListener value="#{role}"
+										target="#{roleView.role}"></f:setPropertyActionListener>
+								</p:commandButton>
+							</center>
+						</p:column>
+
+						<p:column headerText="#{lbl['global.table.delete']}" width="15%">
+							<center>
+								<p:commandButton value="#{lbl['global.table.btn.delete']}" icon="fa fa-trash" action="#{roleView.delete}" update="generic_message role_tbl_id">
+									<p:confirm header="Delete role" message="Be sure that no user has this role!!!"
+										icon="ui-icon-alert" />
+									<f:setPropertyActionListener value="#{role}"
+										target="#{roleView.role}"></f:setPropertyActionListener>	
+								</p:commandButton>
+								<p:confirmDialog global="true" showEffect="fade"
+									hideEffect="fade">
+									<p:commandButton value="Yes" type="button"
+										styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+									<p:commandButton value="No" type="button"
+										styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+								</p:confirmDialog>
+
+							</center>
+						</p:column>
+
+
+					</p:dataTable>
+				</h:form>
+			</p:fieldset>
+			
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta charset="UTF-8" />
+	<title>CSS - POS</title>
+	<link rel="stylesheet"
+		href="#{facesContext.externalContext.request.contextPath}/resources/css/index.css" />
+</h:head>
+<h:body>
+	<ui:composition template="/templates/template.xhtml">
+		<ui:define name="pos_contents">
+			<h:form id="new_b_form">
+				<p:fieldset legend="Business Line">
+					<p:messages id="info_msg"/>
+					<p:panelGrid columns="4"  styleClass="css_panel_grid">
+						<p:outputLabel value="Name"/> <p:inputText value="#{businessLineView.business.name}" required="true" requiredMessage="Name is required"/>
+						<p:outputLabel value="Description"/> <p:inputText value="#{businessLineView.business.description}" required="true" requiredMessage="Address is required"/>
+						<p:outputLabel value="Allow negative stock?"/>
+						 <p:selectBooleanCheckbox value="#{businessLineView.business.negativestock}"/>
+						<p:spacer/><p:spacer/><p:spacer/>
+					    <p:commandButton update="new_b_form info_msg :tbl_form:bl_table" value="Save" action="#{businessLineView.save}"></p:commandButton>
+					</p:panelGrid>
+				</p:fieldset>
+			</h:form>
+			<h:form id="tbl_form">
+					
+				<p:fieldset legend="All Business lines">
+					<p:commandButton update="bl_table" value="refresh" action="#{businessLineView.listAll}"></p:commandButton>
+					<p:dataTable value="#{businessLineView.allbusinessLines}" var="bl" id="bl_table">
+						<p:column headerText="Name">
+							<center><p:inputText value="#{bl.name}"/></center>
+						</p:column>
+						<p:column headerText="Description">
+							<center><p:inputText value="#{bl.description}"/></center>
+						</p:column>
+						<p:column headerText="Allows -ve Stock?">
+							<center><p:selectBooleanCheckbox value="#{bl.negativestock}"/></center>	
+						</p:column>
+						<p:column headerText="update">
+							<center>
+							<p:commandLink value="update" partialSubmit="true" update=":new_b_form:info_msg" action="#{businessLineView.update}">
+								<f:setPropertyActionListener value="#{bl}" target="#{businessLineView.selectedBusinesslline}"></f:setPropertyActionListener>
+							</p:commandLink>
+							</center>
+						</p:column>
+						<p:column headerText="delete">
+							<center>
+							<p:commandLink value="delete" partialSubmit="true" update="bl_table :new_b_form:info_msg" action="#{businessLineView.delete}">
+								<f:setPropertyActionListener value="#{bl}" target="#{businessLineView.selectedBusinesslline}"></f:setPropertyActionListener>
+							</p:commandLink>
+							</center>
+						</p:column>
+					</p:dataTable>
+				</p:fieldset>
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</h:body>
+</html>

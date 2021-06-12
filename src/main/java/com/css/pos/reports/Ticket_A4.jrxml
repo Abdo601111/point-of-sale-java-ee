@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ticketsample" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b29a1b2f-c3cd-48ba-b723-c98ef4492bb4">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="company" class="java.lang.String"/>
+	<parameter name="address" class="java.lang.String"/>
+	<parameter name="phone" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="path" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="TICKET" class="com.pos.sales.dto.TicketInfoDto"/>
+	<background>
+		<band/>
+	</background>
+	<pageHeader>
+		<band height="196">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-2" x="62" y="126" width="131" height="19" uuid="5f5deb39-9e36-4265-99ef-5a748abbe00e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getTicketNumber().toString()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField-4" x="62" y="168" width="131" height="19" uuid="1f17e53c-f405-42fe-bc9b-8d2b0a85adab"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomerId()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-3" x="62" y="148" width="131" height="19" uuid="2be8892b-7d74-464d-9f4c-5b0f95cd36a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="10" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getDate()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="147" width="57" height="20" uuid="b9a53d57-d54b-4355-836c-6c961c6f49c1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="11" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="126" width="57" height="20" uuid="7ee80abd-b083-43ae-b8b3-31046ccbf1b6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="11" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Invoice ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="167" width="57" height="20" uuid="2ee61ddb-f62c-43c3-8adb-688483429674"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="11" isBold="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="25" width="164" height="20" uuid="bbb42c74-fc43-4491-8ad9-0947ae78b542"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getAddress()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="0" width="164" height="23" uuid="04e3e0a0-d9f7-49bb-af86-d99b9a9209f1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCompany()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="371" y="46" width="164" height="20" uuid="149c70c5-cf31-4554-938d-73b5c85d6bcf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getPhone()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="3" y="0" width="106" height="84" uuid="45d70193-d5ce-408e-bc01-e50e9a14bff1"/>
+				<imageExpression><![CDATA[$F{TICKET}.getPath()]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="3" y="95" width="155" height="24" uuid="88ccc933-39d8-497c-9b6e-5ea9efa8a012"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="13"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Reciept / Sales Invoice]]></text>
+			</staticText>
+			<line>
+				<reportElement x="4" y="84" width="531" height="1" forecolor="#666666" uuid="27bc8093-7385-4bd1-ad4f-5ea52d3ab361"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="41">
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-1" x="0" y="0" width="535" height="40" uuid="dfccf52e-764f-4ae5-aac0-311e5bb265bd"/>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource(
+$F{TICKET}.getM_aLines()
+)]]></dataSourceExpression>
+				<subreportExpression><![CDATA["./ticketsample_lines_A4.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44">
+			<staticText>
+				<reportElement x="4" y="16" width="155" height="20" uuid="e6fa0702-b814-44e3-8e75-a3cdb2009a18"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SdArial" size="11"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[We are pleased to serve you]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="171" y="16" width="135" height="20" uuid="e93d3032-5668-4ff6-814b-635259245f4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="10"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCompany()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="6" width="531" height="1" forecolor="#666666" uuid="fe63cc94-6472-4159-bac4-840d028e0d15"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="164">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-7" x="470" y="46" width="60" height="19" uuid="dd269dd5-0536-4ce3-b2e8-8473f3670f04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getTotal()).toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="24" width="60" height="20" uuid="40a53f04-baed-4e76-8954-96eec6a44278"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getDiscountValue()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="4" width="60" height="20" uuid="298fdb94-185e-4c89-a1a8-95debefca7f9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getSubTotal()).toString()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="308" y="4" width="95" height="20" uuid="2d51bd7e-bd3f-44f0-999d-6c66ab06862d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Sub Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="24" width="95" height="20" uuid="e1465719-ebcf-4bda-b60e-4a2dec4b8879"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="308" y="45" width="95" height="20" uuid="502df666-3de6-48cf-9255-9fcb8b2426c3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SdArial" size="12" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Ticket Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="308" y="23" width="222" height="1" uuid="8f0928de-78d7-4898-a3d1-ca17258ffaa8"/>
+			</line>
+			<line>
+				<reportElement x="308" y="4" width="222" height="1" uuid="c4bbaae4-1e4f-4e8a-a656-0d0435f7d3ac"/>
+			</line>
+			<line>
+				<reportElement x="308" y="44" width="222" height="1" uuid="63408382-a638-4b12-ad3e-97428a7adfde"/>
+			</line>
+			<line>
+				<reportElement x="308" y="65" width="222" height="1" uuid="117dc284-6275-433c-8d70-34bfc72d45c1"/>
+			</line>
+			<staticText>
+				<reportElement x="4" y="64" width="101" height="20" uuid="a98cdb23-f14e-4adb-b76f-6c7f27b02c52"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Insurance Company]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="4" width="101" height="20" uuid="e2d22633-b3a7-4fde-9e65-17e7f4e01f8c"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Cash]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="24" width="101" height="20" uuid="29b9d5ae-9765-47b9-8143-e8df6680e4d7"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Credit Card]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="44" width="101" height="20" uuid="19c077cb-513d-42f1-8c90-53966a915edf"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Debt.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="126" y="4" width="100" height="20" uuid="e21b8499-7298-40dc-a9eb-05b872279dbd"/>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getCash()).toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="24" width="100" height="20" uuid="bf0e24bb-ef24-4856-95ea-98ea12285c84"/>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getCreditCard()).toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="44" width="100" height="20" uuid="b8b1f66b-101f-4f77-b930-0efa30c15eb4"/>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getDebt()).toString()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="64" width="100" height="20" uuid="e5e6da08-badc-4c39-9c78-f738e1310773"/>
+				<textFieldExpression><![CDATA[new Double($F{TICKET}.getIncoPay()).toString()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="313" y="136" width="57" height="20" uuid="71926bc1-8eaa-48b4-a1cf-c96d7715e03e"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Casher]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="370" y="136" width="165" height="20" uuid="8cadf52c-2f99-4b4f-8866-59c88da3670a"/>
+				<textElement>
+					<font fontName="SdArial" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TICKET}.getUserName()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="4" y="96" width="526" height="25" uuid="9b81744c-daf1-4f9f-94b7-71c09ee0a9d1"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{TICKET}.getCustomerEyeMeasures()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

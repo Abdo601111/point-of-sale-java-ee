@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="products" pageWidth="595" pageHeight="842" columnWidth="536" leftMargin="29" rightMargin="30" topMargin="20" bottomMargin="20">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="76"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="TAXESLOGIC" class="com.INjaz.pos.sales.TaxesLogic" isForPrompting="false"/>
+	<parameter name="user" class="java.lang.String"/>
+	<parameter name="path" class="java.lang.String"/>
+	<parameter name="branchId" class="java.lang.String"/>
+	<parameter name="companyName" class="java.lang.String"/>
+	<parameter name="companyAdd" class="java.lang.String"/>
+	<parameter name="companyTel" class="java.lang.String"/>
+	<parameter name="branchName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     STOCKCURRENT."UNITS" AS STOCKCURRENT_UNITS,
+     PRODUCTS."REFERENCE" AS PRODUCTS_REFERENCE,
+     PRODUCTS."CODE" AS PRODUCTS_CODE,
+     PRODUCTS."NAME" AS PRODUCTS_NAME,
+     PRODUCTS."PRICEBUY" AS PRODUCTS_PRICEBUY,
+     PRODUCTS."PRICESELL" AS PRODUCTS_PRICESELL,
+     PRODUCTS."CATEGORY" AS PRODUCTS_CATEGORY,
+     CATEGORIES."NAME" AS CATEGORIES_NAME,
+     STOCKCURRENT."TOTAL" AS STOCKCURRENT_TOTAL,
+     STOCKCURRENT."COST" AS STOCKCURRENT_COST
+FROM
+     "CATEGORIES" CATEGORIES INNER JOIN "PRODUCTS" PRODUCTS ON CATEGORIES."ID" = PRODUCTS."CATEGORY"
+     INNER JOIN "STOCKCURRENT" STOCKCURRENT ON PRODUCTS."ID" = STOCKCURRENT."PRODUCT"
+WHERE
+     STOCKCURRENT.LOCATION = $P{branchId}]]>
+	</queryString>
+	<field name="STOCKCURRENT_UNITS" class="java.lang.Double"/>
+	<field name="PRODUCTS_REFERENCE" class="java.lang.String"/>
+	<field name="PRODUCTS_CODE" class="java.lang.String"/>
+	<field name="PRODUCTS_NAME" class="java.lang.String"/>
+	<field name="PRODUCTS_PRICEBUY" class="java.lang.Double"/>
+	<field name="PRODUCTS_PRICESELL" class="java.lang.Double"/>
+	<field name="PRODUCTS_CATEGORY" class="java.lang.String"/>
+	<field name="CATEGORIES_NAME" class="java.lang.String"/>
+	<field name="STOCKCURRENT_TOTAL" class="java.lang.Double"/>
+	<field name="STOCKCURRENT_COST" class="java.lang.Double"/>
+	<variable name="variable1" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{STOCKCURRENT_UNITS}*$F{PRODUCTS_PRICESELL}]]></variableExpression>
+	</variable>
+	<group name="Categories">
+		<groupExpression><![CDATA[$F{PRODUCTS_CATEGORY}]]></groupExpression>
+		<groupHeader>
+			<band height="62">
+				<textField>
+					<reportElement x="1" y="6" width="90" height="20"/>
+					<textElement lineSpacing="Single">
+						<font fontName="SdArial" size="15" isBold="true" isItalic="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CATEGORIES_NAME}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="17" y="41" width="43" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ref]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="60" y="41" width="87" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="147" y="41" width="68" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Price Buy]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="215" y="41" width="68" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Price Sell]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="336" y="41" width="68" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Units]]></text>
+				</staticText>
+				<line>
+					<reportElement x="2" y="26" width="90" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="404" y="41" width="62" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Cost]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="466" y="41" width="62" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Sell]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="283" y="41" width="53" height="20"/>
+					<box>
+						<pen lineWidth="1.0"/>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SdArial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cost]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band/>
+	</title>
+	<pageHeader>
+		<band height="170">
+			<staticText>
+				<reportElement key="textField-12" mode="Transparent" x="11" y="103" width="529" height="28" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SdArial" size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Inventory]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="413" y="30" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="11"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyAdd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="51" width="77" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyTel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="4" width="195" height="23"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font fontName="SdArial" size="18"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Blank">
+				<reportElement x="17" y="5" width="105" height="89"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{path}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="77" y="137" width="141" height="25"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="16" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{branchName}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="137" width="67" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="SdArial" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Branch :]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band/>
+	</columnHeader>
+	<detail>
+		<band height="43">
+			<textField>
+				<reportElement x="60" y="0" width="87" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTS_NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="215" y="0" width="68" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTS_PRICESELL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="0" width="68" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{STOCKCURRENT_UNITS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="0" width="62" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{STOCKCURRENT_TOTAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="0" width="62" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$V{variable1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="17" y="0" width="43" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTS_REFERENCE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="147" y="0" width="68" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTS_PRICEBUY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="0" width="53" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{STOCKCURRENT_COST}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="98">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-6" mode="Opaque" x="218" y="78" width="40" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-7" mode="Opaque" x="278" y="78" width="40" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement key="staticText-5" mode="Opaque" x="258" y="78" width="20" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
+					<font fontName="SdArial" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<line>
+				<reportElement key="line-3" mode="Opaque" x="1" y="29" width="535" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="219" y="39" width="100" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyAdd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="99" y="39" width="100" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="39" width="100" height="20"/>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font fontName="SdArial"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{companyTel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>
